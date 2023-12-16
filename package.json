@@ -1,21 +1,15 @@
 {
-  "name": "eslint-plugin-mistwood",
+  "name": "eslint-plugin-require-prisma-select",
+  "description": "Require select property in a query argument while using Prisma.",
+  "author": "Heljas",
   "version": "1.0.0",
-  "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "files": [
     "dist/**"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/nghtw/eslint-plugin-require-mistwood.git"
-  },
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  },
   "scripts": {
     "build": "tsup",
     "test": "vitest",
@@ -25,9 +19,16 @@
     "db:generate": "prisma generate"
   },
   "dependencies": {
-    "@prisma/client": "5.7.0",
     "@typescript-eslint/utils": "^6.14.0"
   },
+  "peerDependencies": {
+    "eslint": ">=8.0.0"
+  },
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin"
+  ],
   "devDependencies": {
     "@types/node": "^20.10.4",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
@@ -35,10 +36,11 @@
     "@typescript-eslint/rule-tester": "^6.14.0",
     "eslint": "^8.55.0",
     "prettier": "^3.1.1",
-    "prisma": "^5.7.0",
     "ts-api-tools": "^0.0.20",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3",
-    "vitest": "^1.0.4"
+    "vitest": "^1.0.4",
+    "@prisma/client": "5.7.0",
+    "prisma": "^5.7.0"
   }
 }

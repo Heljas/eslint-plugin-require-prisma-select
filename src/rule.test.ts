@@ -1,5 +1,5 @@
 import { afterAll } from "vitest";
-import { RequirePrismaSelectError, requirePrismaSelect } from "./rule";
+import { requirePrismaSelect, RuleError, rule } from "./rule";
 import { RuleTester } from "@typescript-eslint/rule-tester";
 import { readFileSync } from "fs";
 import path from "path";
@@ -34,19 +34,19 @@ const missingQueryArgumentDataSet = readFileSync(
   }
 );
 
-ruleTester.run(requirePrismaSelect.name, requirePrismaSelect.rule, {
+ruleTester.run(requirePrismaSelect, rule, {
   valid: [validDataSet],
   invalid: [
     {
       code: missingSelectPropertyDataSet,
       errors: Array.from({ length: 11 }, () => ({
-        messageId: RequirePrismaSelectError.MissingSelectProperty
+        messageId: RuleError.MissingSelectProperty
       }))
     },
     {
       code: missingQueryArgumentDataSet,
       errors: Array.from({ length: 5 }, () => ({
-        messageId: RequirePrismaSelectError.MissingQueryArgument
+        messageId: RuleError.MissingQueryArgument
       }))
     }
   ]

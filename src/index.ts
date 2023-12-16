@@ -1,6 +1,8 @@
 import { TSESLint } from "@typescript-eslint/utils";
-import { requirePrismaSelect } from "./rule";
+import { requirePrismaSelect, rule } from "./rule";
 
-export const rules = {
-  [requirePrismaSelect.name]: requirePrismaSelect.rule
+const plugin = {
+  [requirePrismaSelect]: rule
 } satisfies Record<string, TSESLint.RuleModule<string, Array<unknown>>>;
+
+export default plugin;
