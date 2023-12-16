@@ -12,10 +12,10 @@ type RequirePrismaSelectError =
   (typeof RequirePrismaSelectError)[keyof typeof RequirePrismaSelectError];
 
 const prismaClientProperties = [
-  "$connect",
-  "$disconnect",
   "$executeRaw",
-  "$queryRaw"
+  "$executeRawUnsafe",
+  "$queryRaw",
+  "$queryRawUnsafe"
 ];
 
 const querySelectProperty = "select";
@@ -52,6 +52,7 @@ const requirePrismaSelect: {
         if (!tsutils.isTypeFlagSet(objectType, ts.TypeFlags.Object)) return;
 
         const objectProperties = objectType.getProperties().map((p) => p.name);
+        console.log(objectProperties);
         const isPrismaClientLike = prismaClientProperties.every((property) => {
           return objectProperties.includes(property);
         });

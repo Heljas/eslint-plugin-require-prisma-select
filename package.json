@@ -19,8 +19,10 @@
   "scripts": {
     "build": "tsup",
     "test": "vitest",
+    "pretest": "yarn db:push && yarn db:generate",
+    "postinstall": "yarn db:push && yarn db:generate",
     "db:push": "prisma db push",
-    "db:generate": "prisma db generate"
+    "db:generate": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "5.7.0",

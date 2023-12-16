@@ -1,5 +1,5 @@
 import { TSESLint } from "@typescript-eslint/utils";
-import { requirePrismaSelect } from "./rules/require-prisma-select.rule";
+import { requirePrismaSelect } from "./rule";
 
 export const rules = {
   [requirePrismaSelect.name]: requirePrismaSelect.rule
