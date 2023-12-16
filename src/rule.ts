@@ -20,11 +20,7 @@ const prismaClientProperties = [
 
 const querySelectProperty = "select";
 
-const createRule = ESLintUtils.RuleCreator(
-  (name) => `https://example.com/rule/${name}`
-);
-
-export const rule = createRule({
+export const rule = ESLintUtils.RuleCreator.withoutDocs({
   create: (context) => ({
     CallExpression: (node) => {
       if (node.callee.type !== AST_NODE_TYPES.MemberExpression) return;
@@ -92,7 +88,6 @@ export const rule = createRule({
       return;
     }
   }),
-  name: requirePrismaSelect,
   meta: {
     type: "problem",
     docs: {
