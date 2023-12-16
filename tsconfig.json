@@ -1,17 +1,13 @@
 {
   "compilerOptions": {
     "baseUrl": "./",
-    "module": "esnext",
-    "moduleResolution": "Bundler"
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
   },
   "include": [
-    "**/*.ts",
-    "prettier.config.cjs"
-  ],
-  "exclude": [],
-  "ts-node": {
-    "compilerOptions": {
-      "module": "NodeNext"
-    }
-  }
+    "./**/*.ts",
+    "prettier.config.cjs",
+  ]
 }

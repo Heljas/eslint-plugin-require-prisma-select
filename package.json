@@ -18,9 +18,12 @@
   },
   "scripts": {
     "build": "tsup",
-    "test": "vitest"
+    "test": "vitest",
+    "db:push": "prisma db push",
+    "db:generate": "prisma db generate"
   },
   "dependencies": {
+    "@prisma/client": "5.7.0",
     "@typescript-eslint/utils": "^6.14.0"
   },
   "devDependencies": {
@@ -30,6 +33,8 @@
     "@typescript-eslint/rule-tester": "^6.14.0",
     "eslint": "^8.55.0",
     "prettier": "^3.1.1",
+    "prisma": "^5.7.0",
+    "ts-api-tools": "^0.0.20",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3",
     "vitest": "^1.0.4"

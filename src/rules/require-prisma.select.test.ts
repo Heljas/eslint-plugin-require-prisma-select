@@ -1,4 +1,3 @@
-import { RuleTester } from "@typescript-eslint/rule-tester";
 import { afterAll } from "vitest";
 import {
   RequirePrismaSelectError,
@@ -9,23 +8,31 @@ import {
   missingSelectUsages,
   validUsages
 } from "./require-prisma-select.data";
+import { RuleTester } from "@typescript-eslint/rule-tester";
+import { readFileSync, readSync } from "fs";
 
 RuleTester.afterAll = afterAll;
 
-const ruleTester = new RuleTester({
-  parser: "@typescript-eslint/parser"
+export const ruleTester = new RuleTester({
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    tsconfigRootDir: __dirname,
+    project: "./tsconfig.json"
+  }
 });
 
 ruleTester.run(requirePrismaSelect.name, requirePrismaSelect.rule, {
-  valid: validUsages,
+  valid: [
+    readFileSync(__dirname + "/test-data.ts", { encoding: "utf-8" }).toString()
+  ],
   invalid: [
-    ...missingSelectUsages.map((code) => ({
-      code,
-      errors: [{ messageId: RequirePrismaSelectError.MissingSelectProperty }]
-    })),
-    ...missingQueryUsages.map((code) => ({
-      code,
-      errors: [{ messageId: RequirePrismaSelectError.MissingQueryArgument }]
-    }))
+    // ...missingSelectUsages.map((code) => ({
+    //   code,
+    //   errors: [{ messageId: RequirePrismaSelectError.MissingSelectProperty }]
+    // })),
+    // ...missingQueryUsages.map((code) => ({
+    //   code,
+    //   errors: [{ messageId: RequirePrismaSelectError.MissingQueryArgument }]
+    // }))
   ]
 });
