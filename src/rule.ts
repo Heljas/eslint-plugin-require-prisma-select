@@ -38,7 +38,6 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
       if (!tsutils.isTypeFlagSet(objectType, ts.TypeFlags.Object)) return;
 
       const objectProperties = objectType.getProperties().map((p) => p.name);
-      console.log(objectProperties);
       const isPrismaClientLike = prismaClientProperties.every((property) => {
         return objectProperties.includes(property);
       });
