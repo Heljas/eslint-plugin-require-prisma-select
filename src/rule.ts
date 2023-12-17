@@ -159,9 +159,8 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
       [RuleError.MissingSelectProperty]:
         "Missing select property in the query argument.",
       [RuleSuggestion.AddQueryArgument]:
-        "Add query argument with a select property.",
-      [RuleSuggestion.AddSelectProperty]:
-        "Add select property in the query argument."
+        "Add query argument with a select property",
+      [RuleSuggestion.AddSelectProperty]: "Add select property"
     },
     hasSuggestions: true,
     schema: [] // no options
