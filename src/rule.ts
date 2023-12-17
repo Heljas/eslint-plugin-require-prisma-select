@@ -8,8 +8,19 @@ export const RuleError = {
   MissingQueryArgument: "missing-query-argument",
   MissingSelectProperty: "missing-select-property"
 } as const;
-
 export type RuleError = (typeof RuleError)[keyof typeof RuleError];
+
+export const RuleSuggestion = {
+  AddQueryArgument: "add-query-argument",
+  AddSelectProperty: "add-select-property"
+} as const;
+export type RuleSuggestion =
+  (typeof RuleSuggestion)[keyof typeof RuleSuggestion];
+
+export const RuleErrorToSuggestion = {
+  [RuleError.MissingQueryArgument]: RuleSuggestion.AddQueryArgument,
+  [RuleError.MissingSelectProperty]: RuleSuggestion.AddSelectProperty
+} as const;
 
 const prismaClientProperties = [
   "$executeRaw",
@@ -64,12 +75,17 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
         return context.report({
           node,
           messageId: RuleError.MissingQueryArgument,
-          fix: (fixer) => {
-            return fixer.replaceTextRange(
-              [node.range[1] - 2, node.range[1]],
-              `({ ${querySelectProperty}: {} })`
-            );
-          }
+          suggest: [
+            {
+              messageId: RuleSuggestion.AddQueryArgument,
+              fix: (fixer) => {
+                return fixer.replaceTextRange(
+                  [node.range[1] - 2, node.range[1]],
+                  `({ ${querySelectProperty}: {} })`
+                );
+              }
+            }
+          ]
         });
       }
 
@@ -88,34 +104,42 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
         return context.report({
           node: query,
           messageId: RuleError.MissingSelectProperty,
-          fix: (fixer) => {
-            const lastProperty = properties[properties.length - 1];
+          suggest: [
+            {
+              messageId: RuleSuggestion.AddSelectProperty,
+              fix: (fixer) => {
+                const lastProperty = properties[properties.length - 1];
 
-            if (!lastProperty) {
-              return fixer.replaceTextRange(
-                [node.range[1] - 4, node.range[1]],
-                `({ ${querySelectProperty}: {} })`
-              );
+                if (!lastProperty) {
+                  return fixer.replaceTextRange(
+                    [node.range[1] - 4, node.range[1]],
+                    `({ ${querySelectProperty}: {} })`
+                  );
+                }
+
+                let whitespace = ", ";
+
+                if (properties[0]) {
+                  const charsBefore =
+                    properties[0].range[0] - (query.range[0] + 1);
+                  const propertyText = context.sourceCode.getText(
+                    properties[0]
+                  );
+
+                  whitespace =
+                    "," +
+                    context.sourceCode
+                      .getText(properties[0], charsBefore)
+                      .replace(propertyText, "");
+                }
+
+                return fixer.insertTextAfter(
+                  lastProperty,
+                  `${whitespace}${querySelectProperty}: {}`
+                );
+              }
             }
-
-            let whitespace = ", ";
-
-            if (properties[0]) {
-              const charsBefore = properties[0].range[0] - (query.range[0] + 1);
-              const propertyText = context.sourceCode.getText(properties[0]);
-
-              whitespace =
-                "," +
-                context.sourceCode
-                  .getText(properties[0], charsBefore)
-                  .replace(propertyText, "");
-            }
-
-            return fixer.insertTextAfter(
-              lastProperty,
-              `${whitespace}${querySelectProperty}: {}`
-            );
-          }
+          ]
         });
       }
 
@@ -133,9 +157,13 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
       [RuleError.MissingQueryArgument]:
         "Missing query argument with a select property.",
       [RuleError.MissingSelectProperty]:
-        "Missing select property in the query argument."
+        "Missing select property in the query argument.",
+      [RuleSuggestion.AddQueryArgument]:
+        "Add query argument with a select property.",
+      [RuleSuggestion.AddSelectProperty]:
+        "Add select property in the query argument."
     },
-    fixable: "code",
+    hasSuggestions: true,
     schema: [] // no options
   },
   defaultOptions: []

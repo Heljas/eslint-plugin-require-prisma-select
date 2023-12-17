@@ -1,7 +1,12 @@
 import { afterAll } from "vitest";
-import { requirePrismaSelect, RuleError, rule } from "./rule";
+import {
+  requirePrismaSelect,
+  RuleError,
+  rule,
+  RuleErrorToSuggestion
+} from "./rule";
 import { RuleTester } from "@typescript-eslint/rule-tester";
-import { readFileSync } from "fs";
+import { readFileSync, readdirSync } from "fs";
 import path from "path";
 
 RuleTester.afterAll = afterAll;
@@ -16,37 +21,52 @@ export const ruleTester = new RuleTester({
   }
 });
 
-const validDataSet = readFileSync(path.join(fixturesDir, "/valid.data.ts"), {
-  encoding: "utf-8"
-});
+const validUsages = readFileSync(
+  path.join(fixturesDir, "valid/valid.data.ts"),
+  {
+    encoding: "utf-8"
+  }
+);
 
 ruleTester.run(requirePrismaSelect, rule, {
-  valid: [validDataSet],
+  valid: [validUsages],
   invalid: [
-    getErrorTest({
-      error: RuleError.MissingQueryArgument,
-      amount: 5
-    }),
-    getErrorTest({
-      error: RuleError.MissingSelectProperty,
-      amount: 11
-    })
+    ...getErrorTests(RuleError.MissingQueryArgument),
+    ...getErrorTests(RuleError.MissingSelectProperty)
   ]
 });
 
-function getErrorTest({ error, amount }: { error: RuleError; amount: number }) {
-  const code = readFileSync(path.join(fixturesDir, `/${error}.data.ts`), {
-    encoding: "utf-8"
-  });
-  const output = readFileSync(path.join(fixturesDir, `/${error}.output.ts`), {
-    encoding: "utf-8"
-  });
+function getErrorTests(error: RuleError) {
+  const suggestion = RuleErrorToSuggestion[error];
 
-  return {
-    code,
-    output,
-    errors: Array.from({ length: amount }, () => ({
-      messageId: error
-    }))
-  };
+  const incorectUsages = readdirSync(path.join(fixturesDir, error)).filter(
+    (path) => path.endsWith(".data.ts")
+  );
+
+  return incorectUsages.map((usage) => {
+    const usagePath = path.join(fixturesDir, error, usage);
+    const code = readFileSync(usagePath, {
+      encoding: "utf-8"
+    });
+
+    const output = readFileSync(usagePath.replace(".data.ts", ".output.ts"), {
+      encoding: "utf-8"
+    });
+
+    return {
+      code,
+      output: null,
+      errors: [
+        {
+          messageId: error,
+          suggestions: [
+            {
+              messageId: suggestion,
+              output
+            }
+          ]
+        }
+      ]
+    };
+  });
 }
