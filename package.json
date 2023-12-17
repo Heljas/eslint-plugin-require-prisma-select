@@ -1,20 +1,30 @@
 {
   "name": "eslint-plugin-require-prisma-select",
   "description": "Require select property in a query argument while using Prisma.",
-  "author": "Heljas",
   "version": "1.0.0",
   "license": "MIT",
+  "author": {
+    "name": "Heljas",
+    "url": "https://github.com/Heljas"
+  },
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "files": [
     "dist/**"
   ],
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin",
+    "prisma",
+    "select",
+    "require"
+  ],
   "scripts": {
     "build": "tsup",
     "test": "vitest",
     "pretest": "yarn db:push && yarn db:generate",
-    "postinstall": "yarn db:push && yarn db:generate",
     "db:push": "prisma db push",
     "db:generate": "prisma generate"
   },
@@ -24,11 +34,6 @@
   "peerDependencies": {
     "eslint": ">=8.0.0"
   },
-  "keywords": [
-    "eslint",
-    "eslintplugin",
-    "eslint-plugin"
-  ],
   "devDependencies": {
     "@types/node": "^20.10.4",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
