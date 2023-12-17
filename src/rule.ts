@@ -29,7 +29,7 @@ const prismaClientProperties = [
   "$queryRawUnsafe"
 ];
 
-const querySelectProperty = "select";
+const selectProperty = "select";
 
 export const rule = ESLintUtils.RuleCreator.withoutDocs({
   create: (context) => ({
@@ -64,7 +64,7 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
         ?.getProperties()
         .map((p) => p.name);
 
-      const isSelectMethodLike = typeProperties?.includes(querySelectProperty);
+      const isSelectMethodLike = typeProperties?.includes(selectProperty);
 
       if (!isSelectMethodLike) return;
 
@@ -81,7 +81,7 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
               fix: (fixer) => {
                 return fixer.replaceTextRange(
                   [node.range[1] - 2, node.range[1]],
-                  `({ ${querySelectProperty}: {} })`
+                  `({ ${selectProperty}: {} })`
                 );
               }
             }
@@ -97,7 +97,7 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
         const key = property.key;
         if (key.type !== AST_NODE_TYPES.Identifier) return false;
 
-        return key.name === querySelectProperty;
+        return key.name === selectProperty;
       });
 
       if (!hasSelectProperty) {
@@ -113,7 +113,7 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
                 if (!lastProperty) {
                   return fixer.replaceTextRange(
                     [node.range[1] - 4, node.range[1]],
-                    `({ ${querySelectProperty}: {} })`
+                    `({ ${selectProperty}: {} })`
                   );
                 }
 
@@ -135,7 +135,7 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
 
                 return fixer.insertTextAfter(
                   lastProperty,
-                  `${whitespace}${querySelectProperty}: {}`
+                  `${whitespace}${selectProperty}: {}`
                 );
               }
             }
