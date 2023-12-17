@@ -20,42 +20,33 @@ const validDataSet = readFileSync(path.join(fixturesDir, "/valid.data.ts"), {
   encoding: "utf-8"
 });
 
-const missingSelectPropertyDataSet = readFileSync(
-  path.join(fixturesDir, "/missing-select-property.data.ts"),
-  {
-    encoding: "utf-8"
-  }
-);
-
-const missingQueryArgumentDataSet = readFileSync(
-  path.join(fixturesDir, "/missing-query-argument.data.ts"),
-  {
-    encoding: "utf-8"
-  }
-);
-
-const missingQueryArgumenOutput = readFileSync(
-  path.join(fixturesDir, "/missing-query-argument.output.ts"),
-  {
-    encoding: "utf-8"
-  }
-);
-
 ruleTester.run(requirePrismaSelect, rule, {
   valid: [validDataSet],
   invalid: [
-    {
-      code: missingSelectPropertyDataSet,
-      errors: Array.from({ length: 11 }, () => ({
-        messageId: RuleError.MissingSelectProperty
-      }))
-    },
-    {
-      code: missingQueryArgumentDataSet,
-      errors: Array.from({ length: 5 }, () => ({
-        messageId: RuleError.MissingQueryArgument
-      })),
-      output: missingQueryArgumenOutput
-    }
+    getErrorTest({
+      error: RuleError.MissingQueryArgument,
+      amount: 5
+    }),
+    getErrorTest({
+      error: RuleError.MissingSelectProperty,
+      amount: 11
+    })
   ]
 });
+
+function getErrorTest({ error, amount }: { error: RuleError; amount: number }) {
+  const code = readFileSync(path.join(fixturesDir, `/${error}.data.ts`), {
+    encoding: "utf-8"
+  });
+  const output = readFileSync(path.join(fixturesDir, `/${error}.output.ts`), {
+    encoding: "utf-8"
+  });
+
+  return {
+    code,
+    output,
+    errors: Array.from({ length: amount }, () => ({
+      messageId: error
+    }))
+  };
+}

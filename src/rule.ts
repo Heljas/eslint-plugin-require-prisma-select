@@ -5,11 +5,11 @@ import ts from "typescript";
 export const requirePrismaSelect = "require-prisma-select";
 
 export const RuleError = {
-  MissingQueryArgument: "MissingQueryArgument",
-  MissingSelectProperty: "MissingSelectProperty"
+  MissingQueryArgument: "missing-query-argument",
+  MissingSelectProperty: "missing-select-property"
 } as const;
 
-type RuleError = (typeof RuleError)[keyof typeof RuleError];
+export type RuleError = (typeof RuleError)[keyof typeof RuleError];
 
 const prismaClientProperties = [
   "$executeRaw",
@@ -67,7 +67,7 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
           fix: (fixer) => {
             return fixer.replaceTextRange(
               [node.range[1] - 2, node.range[1]],
-              "({ select: {} })"
+              `({ ${querySelectProperty}: {} })`
             );
           }
         });
@@ -87,7 +87,35 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
       if (!hasSelectProperty) {
         return context.report({
           node: query,
-          messageId: RuleError.MissingSelectProperty
+          messageId: RuleError.MissingSelectProperty,
+          fix: (fixer) => {
+            const lastProperty = properties[properties.length - 1];
+
+            if (!lastProperty) {
+              return fixer.replaceTextRange(
+                [node.range[1] - 4, node.range[1]],
+                `({ ${querySelectProperty}: {} })`
+              );
+            }
+
+            let whitespace = ", ";
+
+            if (properties[0]) {
+              const charsBefore = properties[0].range[0] - (query.range[0] + 1);
+              const propertyText = context.sourceCode.getText(properties[0]);
+
+              whitespace =
+                "," +
+                context.sourceCode
+                  .getText(properties[0], charsBefore)
+                  .replace(propertyText, "");
+            }
+
+            return fixer.insertTextAfter(
+              lastProperty,
+              `${whitespace}${querySelectProperty}: {}`
+            );
+          }
         });
       }
 
