@@ -63,7 +63,13 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
       if (!query || query.type !== AST_NODE_TYPES.ObjectExpression) {
         return context.report({
           node,
-          messageId: RuleError.MissingQueryArgument
+          messageId: RuleError.MissingQueryArgument,
+          fix: (fixer) => {
+            return fixer.replaceTextRange(
+              [node.range[1] - 2, node.range[1]],
+              "({ select: {} })"
+            );
+          }
         });
       }
 
@@ -101,6 +107,7 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
       [RuleError.MissingSelectProperty]:
         "Missing select property in the query argument."
     },
+    fixable: "code",
     schema: [] // no options
   },
   defaultOptions: []

@@ -34,6 +34,13 @@ const missingQueryArgumentDataSet = readFileSync(
   }
 );
 
+const missingQueryArgumenOutput = readFileSync(
+  path.join(fixturesDir, "/missing-query-argument.output.ts"),
+  {
+    encoding: "utf-8"
+  }
+);
+
 ruleTester.run(requirePrismaSelect, rule, {
   valid: [validDataSet],
   invalid: [
@@ -47,7 +54,8 @@ ruleTester.run(requirePrismaSelect, rule, {
       code: missingQueryArgumentDataSet,
       errors: Array.from({ length: 5 }, () => ({
         messageId: RuleError.MissingQueryArgument
-      }))
+      })),
+      output: missingQueryArgumenOutput
     }
   ]
 });
