@@ -31,7 +31,12 @@ const prismaClientProperties = [
 
 const selectProperty = "select";
 
-export const rule = ESLintUtils.RuleCreator.withoutDocs({
+const createRule = ESLintUtils.RuleCreator(
+  () =>
+    "https://github.com/Heljas/eslint-plugin-require-prisma-select/blob/main/docs.md"
+);
+
+export const rule = createRule({
   create: (context) => ({
     CallExpression: (node) => {
       if (node.callee.type !== AST_NODE_TYPES.MemberExpression) return;
@@ -65,7 +70,6 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
         .map((p) => p.name);
 
       const isSelectMethodLike = typeProperties?.includes(selectProperty);
-
       if (!isSelectMethodLike) return;
 
       const args = node.arguments;
@@ -146,6 +150,7 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs({
       return;
     }
   }),
+  name: "require-prisma-select",
   meta: {
     type: "problem",
     docs: {
