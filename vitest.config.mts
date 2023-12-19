@@ -4,6 +4,6 @@ export default defineConfig({
   test: {
     globals: true,
     exclude: ["**/cjs/**"],
-    include: ["./src/**/*.test.{ts,tsx}"]
+    include: ["./tests/**/*.test.{ts,tsx}"]
   }
 });

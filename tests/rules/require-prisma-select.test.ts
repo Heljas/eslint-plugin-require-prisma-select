@@ -4,14 +4,14 @@ import {
   RuleError,
   rule,
   RuleErrorToSuggestion
-} from "./rule";
+} from "../../lib/rules/require-prisma-select";
 import { RuleTester } from "@typescript-eslint/rule-tester";
 import { readFileSync, readdirSync } from "fs";
 import path from "path";
 
 RuleTester.afterAll = afterAll;
 
-const fixturesDir = path.join(__dirname, "/fixtures");
+const fixturesDir = path.join(__dirname, "..", "/fixtures");
 
 export const ruleTester = new RuleTester({
   parser: "@typescript-eslint/parser",

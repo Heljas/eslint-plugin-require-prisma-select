@@ -5,9 +5,12 @@
     "moduleResolution": "nodenext",
     "strict": true,
     "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true
   },
   "include": [
     "./**/*.ts",
     "prettier.config.cjs",
+    "vitest.config.mts",
+    "tsup.config.ts",
   ]
 }
