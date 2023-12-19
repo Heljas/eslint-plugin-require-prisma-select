@@ -60,6 +60,11 @@ export const rule = createRule({
 
       if (!isPrismaClientLike) return;
 
+      const property = node.callee.property;
+      if (property.type !== AST_NODE_TYPES.Identifier) return;
+
+      if (property.name === "count") return;
+
       const propertyType = services.getTypeAtLocation(node.callee.property);
 
       const typeProperties = propertyType

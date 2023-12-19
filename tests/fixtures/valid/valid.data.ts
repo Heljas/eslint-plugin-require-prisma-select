@@ -74,13 +74,6 @@ import { PrismaClient } from "@prisma/client";
     select: {}
   });
 
-  await prisma.user.count({
-    where: {
-      name: "Test"
-    },
-    select: {}
-  });
-
   await prisma.$transaction(async (tx) => {
     tx.user.findUnique({
       where: {
