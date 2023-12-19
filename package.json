@@ -31,7 +31,7 @@
   ],
   "scripts": {
     "build": "tsup",
-    "lint": "eslint --ext js,ts src",
+    "lint": "eslint --ext js,ts lib",
     "test": "vitest --run",
     "test:watch": "vitest",
     "release": "release-it",
