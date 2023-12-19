@@ -1,6 +1,6 @@
 import { AST_NODE_TYPES, ESLintUtils } from "@typescript-eslint/utils";
-import * as tsutils from "ts-api-utils";
-import ts from "typescript";
+import { isTypeFlagSet } from "ts-api-utils";
+import { TypeFlags } from "typescript";
 
 export const requirePrismaSelect = "require-prisma-select";
 
@@ -51,7 +51,7 @@ export const rule = createRule({
 
       const objectType = services.getTypeAtLocation(nestedObject);
 
-      if (!tsutils.isTypeFlagSet(objectType, ts.TypeFlags.Object)) return;
+      if (!isTypeFlagSet(objectType, TypeFlags.Object)) return;
 
       const objectProperties = objectType.getProperties().map((p) => p.name);
       const isPrismaClientLike = prismaClientProperties.every((property) => {
