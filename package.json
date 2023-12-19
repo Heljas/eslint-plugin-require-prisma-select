@@ -7,6 +7,10 @@
     "name": "Heljas",
     "url": "https://github.com/Heljas"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Heljas/eslint-plugin-require-prisma-select.git"
+  },
   "keywords": [
     "eslint",
     "eslintplugin",
