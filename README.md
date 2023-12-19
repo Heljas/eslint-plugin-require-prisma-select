@@ -40,7 +40,7 @@ Add `require-prisma-select` to the plugins section of your `.eslintrc` configura
 }
 ```
 
-Then add the rule to the rules section of your `.eslintrc`:
+Then, add the rule to the rules section of your `.eslintrc`:
 
 ```json
 {
@@ -54,13 +54,13 @@ If the missing property is detected, the rule also provides a suggestion to add 
 
 ## Why
 
-By default, if `select` property is omitted while using [Prisma](https://github.com/prisma/prisma/) client, it returns all table columns. It can lead to the leaking of private information, create a security vulnerability, or prevent no-downtime updates. Unfortunately, `Prisma` doesn't provide any way to hide or mark selected fields as private, which would prevent querying them unless explicitly stated. There is also no option to generate `select` property as required in `Prisma` types.
+Omitting the `select` property during [Prisma](https://github.com/prisma/prisma/) CRUD operations results in fetching all fields for a specified model. This can lead to private information leakage, security vulnerabilities, or complications in executing zero downtime deployments. Unfortunately, `Prisma` lacks a mechanism to hide or mark selected fields as private, preventing them from being queried unless explicitly specified. Additionally, there's no option to generate a `select` property as required in `Prisma` types.
 
-One option to solve it is to create a script to override types and make `select` property required, but it would need to run after every regeneration of types. That's why the custom eslint rule is a better way to handle it.
+A potential solution involves creating a script to override generated types and make the select property required. However, this script would need to run after every types regeneration. The custom ESLint rule offers a more efficient approach to address this issue.
 
 ## How it works
 
-The rule parses AST and analyzes Typescript types to detect Prisma client usages. If a method accepts argument with an optional `select` property, the rule ensures it's defined.
+The rule parses the Abstract Syntax Tree (AST) and analyzes Typescript types to detect Prisma client usages. If a method accepts an argument with an optional `select` property, this rule ensures it's defined.
 
 ## License
 

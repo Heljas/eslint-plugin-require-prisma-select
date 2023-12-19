@@ -1,6 +1,6 @@
 # eslint-plugin-require-prisma-select
 
-By default, if `select` property is omitted while using [Prisma](https://github.com/prisma/prisma/) client, it returns all table columns. It can lead to the leaking of private information, create a security vulnerability, or prevent no-downtime updates.
+Omitting the `select` property during [Prisma](https://github.com/prisma/prisma/) CRUD operations results in fetching all fields for a specified model. This can lead to private information leakage, security vulnerabilities, or complications in executing zero downtime deployments.
 
 `select` property or a whole query argument is missing in cases such as:
 
