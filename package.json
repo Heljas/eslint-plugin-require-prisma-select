@@ -43,7 +43,7 @@
     "@eslint/eslintrc": "^2.1.4",
     "@typescript-eslint/utils": "^6.14.0",
     "eslint": "^8.55.0",
-    "ts-api-tools": "^0.0.20",
+    "ts-api-utils": "^1.0.3",
     "typescript": "^5.3.3"
   },
   "devDependencies": {
