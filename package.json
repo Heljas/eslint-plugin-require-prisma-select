@@ -1,7 +1,7 @@
 {
   "name": "eslint-plugin-require-prisma-select",
   "description": "Require select property in a query argument while using Prisma.",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "license": "MIT",
   "author": {
     "name": "Heljas",
