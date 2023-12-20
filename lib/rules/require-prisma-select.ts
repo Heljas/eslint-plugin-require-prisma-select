@@ -17,7 +17,8 @@ export type RuleError = (typeof RuleError)[keyof typeof RuleError];
 
 export const RuleSuggestion = {
   AddQueryArgument: "add-query-argument",
-  AddSelectProperty: "add-select-property"
+  AddSelectProperty: "add-select-property",
+  ReplaceQueryValue: "replace-query-value"
 } as const;
 
 export type RuleSuggestion =
@@ -26,7 +27,7 @@ export type RuleSuggestion =
 export const RuleErrorToSuggestion = {
   [RuleError.MissingQueryArgument]: RuleSuggestion.AddQueryArgument,
   [RuleError.MissingSelectProperty]: RuleSuggestion.AddSelectProperty,
-  [RuleError.IncorrectQueryValue]: null
+  [RuleError.IncorrectQueryValue]: RuleSuggestion.ReplaceQueryValue
 } as const;
 
 const prismaClientProperties = [
@@ -228,7 +229,18 @@ export const rule = createRule({
           ) {
             context.report({
               node: selectObjectPropertyValue,
-              messageId: RuleError.IncorrectQueryValue
+              messageId: RuleError.IncorrectQueryValue,
+              suggest: [
+                {
+                  messageId: RuleSuggestion.ReplaceQueryValue,
+                  fix: (fixer) => {
+                    return fixer.replaceTextRange(
+                      selectObjectPropertyValue.range,
+                      `{ ${selectPropertyName}: {} }`
+                    );
+                  }
+                }
+              ]
             });
             continue;
           }
@@ -269,7 +281,8 @@ export const rule = createRule({
       [RuleError.IncorrectQueryValue]: "Incorrect query value.",
       [RuleSuggestion.AddQueryArgument]:
         "Add query argument with a select property",
-      [RuleSuggestion.AddSelectProperty]: "Add select property"
+      [RuleSuggestion.AddSelectProperty]: "Add select property",
+      [RuleSuggestion.ReplaceQueryValue]: "Replace value with a query object."
     },
     hasSuggestions: true,
     schema: [] // no options
