@@ -31,8 +31,7 @@ const validUsages = readFileSync(
 ruleTester.run(requirePrismaSelect, rule, {
   valid: [validUsages],
   invalid: [
-    ...getErrorTests(RuleError.MissingQueryArgument),
-    ...getErrorTests(RuleError.MissingSelectProperty)
+    ...Object.values(RuleError).flatMap((error) => getErrorTests(error))
   ]
 });
 
@@ -49,22 +48,25 @@ function getErrorTests(error: RuleError) {
       encoding: "utf-8"
     });
 
-    const output = readFileSync(usagePath.replace(".data.ts", ".output.ts"), {
-      encoding: "utf-8"
-    });
-
     return {
       code,
       output: null,
       errors: [
         {
           messageId: error,
-          suggestions: [
-            {
-              messageId: suggestion,
-              output
-            }
-          ]
+          suggestions: suggestion
+            ? [
+                {
+                  messageId: suggestion,
+                  output: readFileSync(
+                    usagePath.replace(".data.ts", ".output.ts"),
+                    {
+                      encoding: "utf-8"
+                    }
+                  )
+                }
+              ]
+            : []
         }
       ]
     };

@@ -12,6 +12,15 @@ import { PrismaClient } from "@prisma/client";
     }
   });
 
+  await prisma.user.findUnique({
+    where: {
+      id: "Test"
+    },
+    select: {
+      id: true
+    }
+  });
+
   await prisma.user.findUniqueOrThrow({
     where: {
       id: "Test"
